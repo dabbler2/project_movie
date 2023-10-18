@@ -58,10 +58,10 @@ async function main(){
 	console.log(movieList[0])
 	let searchBtn = document.getElementById('searchBtn')
 	searchBtn.onclick = () => {
-		let keyword = document.getElementById('keyword').value
+		let keyword = document.getElementById('keyword').value.toUpperCase()
 		let cards = document.getElementById('cards')
 		cards.replaceChildren()
-		movieList.filter(movie => movie.title.includes(keyword))
+		movieList.filter(movie => movie.title.toUpperCase().includes(keyword))
 			.map(movie => cards.appendChild(moviecard(movie)))
 		if(!cards.firstChild) cards.textContent = "검색 결과가 없습니다."
 	}
