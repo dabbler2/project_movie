@@ -3,8 +3,8 @@
 }
 
 html, body{
-	margin: 0
-	padding: 0
+	margin: 0;
+	padding: 0;
 }
 
 #searchBar{
@@ -37,14 +37,28 @@ html, body{
 	color: white;
 }
 
+#cards{
+	padding-top: 7px;
+	padding-left: 15px;
+}
+
 .card{
-	margin-top: 5px;
+	height: 96px;
+	margin-top: 7px;
 	display: flex;
 	flex-direction: row;
+	border-bottom: 1px solid black;
+	overflow: hidden;
 }
 
 p{
 	margin: 2px;
+}
+
+.poster{
+	width: 64px;
+	height: 96px;
+	margin-right: 10px;
 }
 
 .title{
@@ -55,8 +69,11 @@ p{
 	font-size: 12px;
 }
 
-.poster{
-	width: 50px;
-	height: 75px;
-	margin-right: 10px;
+.rating{
+	font-size: 12px;
+}
+
+.overview{
+	margin-left: 3px;
+	font-size: 9px;
 }

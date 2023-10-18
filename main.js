@@ -22,21 +22,34 @@ let moviecard = movie => {
 	let poster = document.createElement('img')
 	poster.classList.add('poster')
 	poster.src = 'https://image.tmdb.org/t/p/original'+movie.poster_path
+	poster.addEventListener('click',() => window.open('https://www.themoviedb.org/movie/'+movie.id,'_blank'))
 	card.appendChild(poster)
 	
 	let illu = document.createElement('div')
 	illu.classList.add('illustration')
+	
 	let title = document.createElement('p')
 	title.classList.add('title')
 	title.textContent = movie.title
 	illu.appendChild(title)
+	
 	let year = document.createElement('p')
 	year.classList.add('year')
 	year.textContent = movie.release_date.slice(0,4)
 	illu.appendChild(year)
+	
+	let rating = document.createElement('p')
+	rating.classList.add('rating')
+	rating.textContent = '평점 '+movie.vote_average
+	illu.appendChild(rating)
+	
+	let overview = document.createElement('overview')
+	overview.classList.add('overview')
+	overview.textContent = movie.overview
+	illu.appendChild(overview)
+	
 	card.appendChild(illu)
-	card.href = 
-	card.addEventListener('click',() => window.open('https://www.themoviedb.org/movie/'+movie.id,'_blank'))
+	
 	return card
 }
 
@@ -50,6 +63,7 @@ async function main(){
 		cards.replaceChildren()
 		movieList.filter(movie => movie.title.includes(keyword))
 			.map(movie => cards.appendChild(moviecard(movie)))
+		if(!cards.firstChild) cards.textContent = "검색 결과가 없습니다."
 	}
 }
 
