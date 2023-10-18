@@ -40,7 +40,7 @@ let moviecard = movie => {
 	
 	let rating = document.createElement('p')
 	rating.classList.add('rating')
-	rating.textContent = '평점 '+movie.vote_average
+	rating.textContent = 'Rating '+movie.vote_average
 	illu.appendChild(rating)
 	
 	let overview = document.createElement('overview')
