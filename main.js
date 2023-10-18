@@ -15,17 +15,41 @@ async function scrap(m=2){
 	return movieList
 }
 
+let moviecard = movie => {
+	let card = document.createElement('div')
+	card.classList.add('card')
+	
+	let poster = document.createElement('img')
+	poster.classList.add('poster')
+	poster.src = 'https://image.tmdb.org/t/p/original'+movie.poster_path
+	card.appendChild(poster)
+	
+	let illu = document.createElement('div')
+	illu.classList.add('illustration')
+	let title = document.createElement('p')
+	title.classList.add('title')
+	title.textContent = movie.title
+	illu.appendChild(title)
+	let year = document.createElement('p')
+	year.classList.add('year')
+	year.textContent = movie.release_date.slice(0,4)
+	illu.appendChild(year)
+	card.appendChild(illu)
+	card.href = 
+	card.addEventListener('click',() => window.open('https://www.themoviedb.org/movie/'+movie.id,'_blank'))
+	return card
+}
+
 async function main(){
 	let movieList = await scrap()
-	console.log(movieList[0].title)
+	console.log(movieList[0])
 	let searchBtn = document.getElementById('searchBtn')
 	searchBtn.onclick = () => {
 		let keyword = document.getElementById('keyword').value
 		let cards = document.getElementById('cards')
-		cards.innerHTML = ''
-		movieList.forEach(movie =>{
-			if(movie.title.includes(keyword)) cards.innerHTML += movie.title+', '
-		})
+		cards.replaceChildren()
+		movieList.filter(movie => movie.title.includes(keyword))
+			.map(movie => cards.appendChild(moviecard(movie)))
 	}
 }
 

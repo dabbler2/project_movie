@@ -36,3 +36,27 @@ html, body{
 	background-color: orange;
 	color: white;
 }
+
+.card{
+	margin-top: 5px;
+	display: flex;
+	flex-direction: row;
+}
+
+p{
+	margin: 2px;
+}
+
+.title{
+	font-weight: bold;
+}
+
+.year{
+	font-size: 12px;
+}
+
+.poster{
+	width: 50px;
+	height: 75px;
+	margin-right: 10px;
+}
