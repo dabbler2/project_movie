@@ -52,10 +52,11 @@ html, body{
 
 .card{
 	height: 96px;
-	margin-top: 7px;
+	margin-top: 10px;
 	display: flex;
 	flex-direction: row;
-	border-bottom: 1px solid black;
+	border: 1px solid black;
+	border-radius: 3px;
 	overflow: hidden;
 }
 
@@ -67,6 +68,11 @@ p{
 	width: 64px;
 	height: 96px;
 	margin-right: 10px;
+	cursor: pointer;
+}
+
+.illustration{
+	padding: 3px;
 }
 
 .title{
