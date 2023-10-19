@@ -36,6 +36,7 @@ let moviecard = movie => {
 	let title = document.createElement('p')
 	title.classList.add('title')
 	title.textContent = movie.title
+	title.addEventListener('click',() => window.open('https://www.themoviedb.org/movie/'+movie.id,'_blank'))
 	illu.appendChild(title)
 	
 	let year = document.createElement('p')

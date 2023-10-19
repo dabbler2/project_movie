@@ -77,6 +77,11 @@ p{
 
 .title{
 	font-weight: bold;
+	cursor: pointer;
+}
+
+.title:hover{
+	color: gray;
 }
 
 .year{
