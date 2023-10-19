@@ -60,32 +60,6 @@ let moviecard = movie => {
 	return card
 }
 
-// 그때그때 카드 만들어서 넣어주기 -> 서버를 매번 접근해야 되니까 안좋음
-/* async function main(){
-	let movieList = await scrap()
-	console.log(movieList[0])
-	let searchBtn = document.getElementById('searchBtn')
-	let keyword = document.getElementById('keyword')
-	searchBtn.onclick = () => {
-		let kw = keyword.value.trim()
-		let kwupper = kw.toUpperCase()
-		keyword.value = ''
-		if(!kwupper || [...kwupper].every(c => c==' ')){
-			message.textContent = "검색 키워드를 입력해주세요."; return
-		}cards.replaceChildren()
-		message.textContent = kw+"의 검색 결과"
-		movieList.filter(movie => movie.title.toUpperCase().includes(kwupper))
-			.map(movie => cards.appendChild(moviecard(movie)))
-		if(!cards.firstChild) message.textContent = kw+"의 검색 결과가 없습니다."
-		
-	}
-	keyword.addEventListener('keypress', event => {
-		if(event.key=='Enter') searchBtn.click()
-	})
-}
-
-main()  */
-
 // 카드는 한번만 만들고 display로 조절하기
 async function main2(){
 	let movieList = await scrap()
