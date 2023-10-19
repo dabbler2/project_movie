@@ -52,7 +52,7 @@ let moviecard = movie => {
 	
 	return card
 }
-
+//
 async function main(){
 	let movieList = await scrap()
 	console.log(movieList[0])
