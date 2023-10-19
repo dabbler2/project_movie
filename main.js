@@ -63,17 +63,23 @@ async function main(){
 	let movieList = await scrap()
 	console.log(movieList[0])
 	let searchBtn = document.getElementById('searchBtn')
+	let keyword = document.getElementById('keyword')
 	searchBtn.onclick = () => {
-		let keyword = document.getElementById('keyword').value.toUpperCase()
-		document.getElementById('keyword').value = ''
-		cards.replaceChildren()
-		if(!keyword || keyword.split(' ').length==keyword.length+1){
+		let kw = keyword.value.trim()
+		let kwupper = kw.toUpperCase()
+		keyword.value = ''
+		if(!kwupper || [...kwupper].every(c => c==' ')){
 			message.textContent = "검색 키워드를 입력해주세요."; return
-		}message.textContent = keyword+"의 검색 결과"
-		movieList.filter(movie => movie.title.toUpperCase().includes(keyword))
+		}cards.replaceChildren()
+		message.textContent = kw+"의 검색 결과"
+		movieList.filter(movie => movie.title.toUpperCase().includes(kwupper))
 			.map(movie => cards.appendChild(moviecard(movie)))
-		if(!cards.firstChild) message.textContent = keyword+"의 검색 결과가 없습니다."
+		if(!cards.firstChild) message.textContent = kw+"의 검색 결과가 없습니다."
+		
 	}
+	keyword.addEventListener('keypress', event => {
+		if(event.key=='Enter') searchBtn.click()
+	})
 }
 
 main() 
