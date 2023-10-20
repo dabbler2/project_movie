@@ -8,18 +8,35 @@ const options = {
 
 let cards = document.getElementById('cards')
 let message = document.getElementById('message')
+let searchBtn = document.getElementById('searchBtn')
+let advancedBtn = document.getElementById('advancedBtn')
+let advanced = document.getElementById('advanced')
+let genreList
 
-async function scrap(m=3){
+// 영화 정보 긁어오기
+async function scrape_movie(m=3){
 	let proms = [], movieList = []
 	message.textContent = "로딩 중입니다. 잠시만 기다려주세요."
 	for(let i=1;i<=m;++i) proms.push(await fetch('https://api.themoviedb.org/3/movie/top_rated?language=en-US&page='+i, options))
 	let proms2 = await Promise.all(proms)
 	let jsons = await Promise.all(proms2.map(res => res.json()))
 	let results = await jsons.map(r => r.results.map(c => movieList.push(c)))
-	message.textContent = ""
 	return movieList
 }
 
+// 장르 정보 긁어오기
+async function scrape_genre(){
+	return fetch('https://api.themoviedb.org/3/genre/movie/list?language=en', options)
+	  .then(response => response.json())
+	  .then(res => {
+		  let d = {}
+		  res.genres.forEach(x => d[x.id] = x.name)
+		  return d
+	  })
+	  .catch(err => console.log(err));
+}
+
+// 영화 카드 만들기
 let moviecard = movie => {
 	let card = document.createElement('div')
 	card.id = "card_"+movie.title.toUpperCase()
@@ -37,13 +54,15 @@ let moviecard = movie => {
 	let title = document.createElement('p')
 	title.classList.add('title')
 	title.textContent = movie.title
+	title.style.display = 'inline-block'
 	title.addEventListener('click',() => window.open('https://www.themoviedb.org/movie/'+movie.id,'_blank'))
 	illu.appendChild(title)
 	
-	let year = document.createElement('p')
-	year.classList.add('year')
-	year.textContent = movie.release_date.slice(0,4)
-	illu.appendChild(year)
+	let year_genre = document.createElement('p')
+	year_genre.classList.add('year')
+	card.genres = movie.genre_ids.map(i => genreList[Number(i)])
+	year_genre.textContent = movie.release_date.slice(0,4)+' · '+card.genres.join(', ')
+	illu.appendChild(year_genre)
 	
 	let rating = document.createElement('p')
 	rating.classList.add('rating')
@@ -60,23 +79,72 @@ let moviecard = movie => {
 	return card
 }
 
-// 카드는 한번만 만들고 display로 조절하기
+// 장르 체크박스 만들기
+let genrecheck = (id,name) => {
+	let div = document.createElement('div')
+	div.style.display = 'flex'
+	
+	let check = document.createElement('input')
+	check.setAttribute("type","checkbox");
+	check.id = name
+	check.checked = true
+	div.appendChild(check)
+	
+	let label = document.createElement('label')
+	label.setAttribute("for",name)
+	label.textContent = name
+	div.appendChild(label)
+	
+	return div
+}
+
+// 영화 장르 중 원하는 장르에 포함되는게 있는지 확인
+let fit = card => {
+	for(let genre of card.genres)
+		if(document.getElementById(genre).checked) return true
+	return false
+}
+
 async function main2(){
-	let movieList = await scrap()
+	let movieList = await scrape_movie()
+	genreList = await scrape_genre()
+	
+	// 장르 체크박스 만들어 넣기
+	let allgenres = genrecheck(0,"All")
+	allgenres.firstChild.addEventListener('change',function(){
+		if(this.checked)
+			for(const check of advanced.children)
+				check.firstChild.checked = true
+		else
+			for(const check of advanced.children) 
+				check.firstChild.checked = false
+	})
+	Object.entries(genreList).forEach(genre => {
+		let gc = genrecheck(...genre)
+		gc.firstChild.addEventListener('change',function(){
+			allgenres.firstChild.checked = [...advanced.children].slice(0,-1).every(c => c.firstChild.checked)
+		})
+		advanced.appendChild(gc)
+	})
+	advanced.appendChild(allgenres)
+	advancedBtn.onclick = () => advanced.style.display = advanced.style.display=='none'? 'grid':'none'
+	message.textContent = ""
+	
+	// 영화 카드 만들어 넣기
 	movieList.map(movie => cards.appendChild(moviecard(movie)))
-	console.log(movieList[0])
-	let searchBtn = document.getElementById('searchBtn')
+	
+	// 검색 기능
 	let keyword = document.getElementById('keyword')
 	searchBtn.onclick = () => {
 		let kw = keyword.value.trim()
 		let kwupper = kw.toUpperCase()
 		keyword.value = ''
-		if(!kwupper || [...kwupper].every(c => c==' ')){
-			message.textContent = "검색 키워드를 입력해주세요."; return
+		if([...advanced.children].slice(0,-1).every(c => !c.firstChild.checked)){
+			message.textContent = "검색 조건을 입력해주세요."; return
 		}
-		message.textContent = kw+"의 검색 결과"
+		message.textContent = kw? kw+"의 검색 결과":"장르 검색 결과"
 		for(const card of cards.children)
-			card.style.display = card.id.slice(5).includes(kwupper)? "flex":"none"
+			card.style.display = card.id.slice(5).includes(kwupper) && fit(card)? "flex":"none"
 	}
 	keyword.addEventListener('keypress', event => {
 		if(event.key=='Enter') searchBtn.click()
