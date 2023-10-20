@@ -147,7 +147,7 @@ async function main2(){
 			card.style.display = card.id.slice(5).includes(kwupper) && fit(card)? "flex":"none"
 	}
 	keyword.addEventListener('keypress', event => {
-		if(event.key=='Enter') searchBtn.click()
+		if(event.key=="Enter") searchBtn.click()
 	})
 }
 
