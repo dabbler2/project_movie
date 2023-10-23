@@ -162,6 +162,7 @@ async function main2(){
 		curPage.textContent = 1
 		for(let i=0;i<Math.min(cardPerPage,cardnum);++i) cardList[i].style.display = "flex"
 	}
+	// 페이지 이동 기능
 	prevPage.onclick = () => {
 		let p = Number(curPage.textContent)
 		if(1<p){
