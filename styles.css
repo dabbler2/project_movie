@@ -64,6 +64,21 @@ button:hover{
 	padding-top: 5px;
 }
 
+#pageBar{
+	margin-top: 5px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	height: 30px;
+}
+
+#curPage, #totalPage{
+	display: inline-block;
+	text-align: center;
+	width: 30px;
+}
+
 #cards{
 	padding: 7px 10px 10px 10px;
 }

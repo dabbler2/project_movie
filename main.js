@@ -12,6 +12,8 @@ let searchBtn = document.getElementById('searchBtn')
 let advancedBtn = document.getElementById('advancedBtn')
 let advanced = document.getElementById('advanced')
 let genreList
+let curPage = document.getElementById('curPage')
+let totalPage = document.getElementById('totalPage')
 
 // 영화 정보 긁어오기
 async function scrape_movie(m=3){
@@ -135,6 +137,8 @@ async function main2(){
 	
 	// 검색 기능
 	let keyword = document.getElementById('keyword')
+	let cardList = []
+	const cardPerPage = 10
 	searchBtn.onclick = () => {
 		let kw = keyword.value.trim()
 		let kwupper = kw.toUpperCase()
@@ -143,8 +147,36 @@ async function main2(){
 			message.textContent = "검색 조건을 입력해주세요."; return
 		}
 		message.textContent = kw? kw+"의 검색 결과":"장르 검색 결과"
-		for(const card of cards.children)
-			card.style.display = card.id.slice(5).includes(kwupper) && fit(card)? "flex":"none"
+		cardList = []
+		for(const card of cards.children){
+			if(card.id.slice(5).includes(kwupper) && fit(card)) cardList.push(card)
+			card.style.display = "none"
+		}
+		let cardnum = cardList.length
+		let pages = (cardnum+cardPerPage-1)/cardPerPage|0
+		totalPage.textContent = pages
+		curPage.max = Math.max(pages,1)
+		if(!pages){
+			message.textContent = "검색 결과가 없습니다."; return
+		}
+		curPage.textContent = 1
+		for(let i=0;i<Math.min(cardPerPage,cardnum);++i) cardList[i].style.display = "flex"
+	}
+	prevPage.onclick = () => {
+		let p = Number(curPage.textContent)
+		if(1<p){
+			for(let i=cardPerPage*(p-1);i<Math.min(cardList.length,cardPerPage*p);++i) cardList[i].style.display = "none"
+			curPage.textContent = --p
+			for(let i=cardPerPage*(p-1);i<cardPerPage*p;++i) cardList[i].style.display = "flex"
+		}
+	}
+	nextPage.onclick = () => {
+		let p = Number(curPage.textContent)
+		if(p<totalPage.textContent){
+			for(let i=cardPerPage*(p-1);i<cardPerPage*p;++i) cardList[i].style.display = "none"
+			curPage.textContent = ++p
+			for(let i=cardPerPage*(p-1);i<Math.min(cardList.length,cardPerPage*p);++i) cardList[i].style.display = "flex"
+		}
 	}
 	keyword.addEventListener('keypress', event => {
 		if(event.key=="Enter") searchBtn.click()
